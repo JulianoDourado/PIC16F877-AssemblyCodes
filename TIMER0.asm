@@ -1,45 +1,45 @@
 ;  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                   C”DIGO FONTE P/ DATAPOLL PIC-2377                     *
+; *                   C√ìDIGO FONTE P/ DATAPOLL PIC-2377                     *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-; Projeto: Lab 7 - Timer 0 e LED.
+; 
 ; Aluno: Juliano Rodrigues Dourado
-; Data:	17/04/2017
+; 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                             DESCRI«√O GERAL                             *
+; *                             DESCRI√á√ÉO GERAL                             *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 ;Deve ser comandado o LED 1, ligando-o e desligando-o, 
-;alternadamente. A temporizaÁ„o deve ser realizada pelo 
-;Timer 0, sem o uso de interrupÁ„o.
-;Dever· seguir a seguinte temporizaÁ„o:
-;Por 30 segundos, dever· permanecer 250 ms ligado e 250 ms 
+;alternadamente. A temporiza√ß√£o deve ser realizada pelo 
+;Timer 0, sem o uso de interrup√ß√£o.
+;Dever√° seguir a seguinte temporiza√ß√£o:
+;Por 30 segundos, dever√° permanecer 250 ms ligado e 250 ms 
 ;desligado;
 ;Nos 30 segundos seguintes: 500 ms ligado e 500 ms desligado;
 ;Nos 30 s seguintes: 1 s ligado e 1 s desligado;
-;Ent„o reinicia o ciclo: 250/250 ms, 500/500 ms e 1/1 s..
+;Ent√£o reinicia o ciclo: 250/250 ms, 500/500 ms e 1/1 s..
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                      CONFIGURA«√O DOS JUMPERS DE PLACA                  *
+; *                      CONFIGURA√á√ÉO DOS JUMPERS DE PLACA                  *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
-;Habilitar CH4,1 (posiÁ„o ON para cima);
+;Habilitar CH4,1 (posi√ß√£o ON para cima);
 ;Desabilitar as demais chaves DIP;
-;Manter o jumper J3 e J4 na posiÁ„o A (1 e 2).
+;Manter o jumper J3 e J4 na posi√ß√£o A (1 e 2).
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                         CONFIGURA«’ES PARA GRAVA«√O                     *
+; *                         CONFIGURA√á√ïES PARA GRAVA√á√ÉO                     *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 __config  _WDT_OFF & _HS_OSC & _LVP_OFF & _DEBUG_ON & _BODEN_OFF 
 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-;*                          ARQUIVOS DE DEFINI«’ES                          *
+;*                          ARQUIVOS DE DEFINI√á√ïES                          *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-#INCLUDE <P16F877.INC>		;ARQUIVO PADR√O MICROCHIP PARA 16F877 
+#INCLUDE <P16F877.INC>		;ARQUIVO PADR√ÉO MICROCHIP PARA 16F877 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *                					MACROS   		      				    *
@@ -49,32 +49,32 @@ __config  _WDT_OFF & _HS_OSC & _LVP_OFF & _DEBUG_ON & _BODEN_OFF
 #define DESLIGA_LED1 bsf PORTD,1         ; Cria uma macro para desligar o LED 1 
 
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  *
-;*                     DEFINI«√O DAS VARI¡VEIS                             *
+;*                     DEFINI√á√ÉO DAS VARI√ÅVEIS                             *
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-CBLOCK	0X20		    ;POSI«√O INICIAL DA RAM
-	Contador			;Vari·vel para auxiliar na contagem de tempo
-	Auxiliar1			;vari·vel para auxiliar na contagem de tempo
-	Auxiliar2			;Vari·vel para auxiliar na contagem de tempo	
-	Auxiliar3			;Vari·vel para auxiliar na contagem de tempo	
+CBLOCK	0X20		    ;POSI√á√ÉO INICIAL DA RAM
+	Contador			;Vari√°vel para auxiliar na contagem de tempo
+	Auxiliar1			;vari√°vel para auxiliar na contagem de tempo
+	Auxiliar2			;Vari√°vel para auxiliar na contagem de tempo	
+	Auxiliar3			;Vari√°vel para auxiliar na contagem de tempo	
  	
 ENDC
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                       DEFINI«√O DAS CONSTANTES                          *
+; *                       DEFINI√á√ÉO DAS CONSTANTES                          *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                      DEFINI«√O DOS BANCOS DA RAM 		      		    *
+; *                      DEFINI√á√ÉO DOS BANCOS DA RAM 		      		    *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-bank0  MACRO 							;Cria uma macro para o banco 0 de memÛria.
+bank0  MACRO 							;Cria uma macro para o banco 0 de mem√≥ria.
 				bcf STATUS,RP0              
 				bcf STATUS,RP1
 	   ENDM		                        ;Fim da macro para o banco 0.
 	   
-bank1  MACRO							;Cria uma macro para o banco 1 de memÛria.
+bank1  MACRO							;Cria uma macro para o banco 1 de mem√≥ria.
 				bsf STATUS,RP0	
 				bcf STATUS,RP1
 	   ENDM								;Fim da macro para o banco 1.
@@ -87,41 +87,41 @@ bank1  MACRO							;Cria uma macro para o banco 1 de memÛria.
 
  								
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                                SAÕDAS                                   *
+; *                                SA√çDAS                                   *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-#define	LED1		PORTD,1 	;SaÌda para LED 1  	 
+#define	LED1		PORTD,1 	;Sa√≠da para LED 1  	 
 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *                   VETOR DE RESET DO MICROCONTROLADOR                    *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	
-	ORG	0x00			;ENDERE«O INICIAL DE PROCESSAMENTO.
+	ORG	0x00			;ENDERE√áO INICIAL DE PROCESSAMENTO.
 	goto	Inicio
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *               VETOR DE INTERRUP«√O DO MICROCONTROLADOR                  *
+; *               VETOR DE INTERRUP√á√ÉO DO MICROCONTROLADOR                  *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-	ORG	0x04			;ENDERE«O INICIAL DA INTERRUP«√O.
-Interrupcao:			;FUN«√O PARA TRATAMENTO DA INTERRUP«√O
+	ORG	0x04			;ENDERE√áO INICIAL DA INTERRUP√á√ÉO.
+Interrupcao:			;FUN√á√ÉO PARA TRATAMENTO DA INTERRUP√á√ÉO
 
 	retfie
 	
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *              CONFIGURA«’ES INICIAIS DE HARDWARE E SOFTWARE              *
+; *              CONFIGURA√á√ïES INICIAIS DE HARDWARE E SOFTWARE              *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-; Nesta rotina s„o inicializadas as portas de I/O do microcontrolador, os
-; perifÈricos que ser„o usados e as configuraÁıes dos registradores 
+; Nesta rotina s√£o inicializadas as portas de I/O do microcontrolador, os
+; perif√©ricos que ser√£o usados e as configura√ß√µes dos registradores 
 ; especiais (SFR)	  
 
 Inicio:
     
-    bank1					;Seleciona o banco 1 de memÛria.
+    bank1					;Seleciona o banco 1 de mem√≥ria.
 	movlw	B'11111101'		;Move para w o valor 11111101
-    movwf	TRISD           ;Move o valor de w para TRISD, DEFININDO RD1 COMO SAÕDA.
+    movwf	TRISD           ;Move o valor de w para TRISD, DEFININDO RD1 COMO SA√çDA.
     
     movlw   B'11010101'	    ;Move para w o valor '11010101'
     
@@ -129,26 +129,26 @@ Inicio:
     						;Clock interno para o timer, Contagem na borda de subida, Prescaler
     						;dessassociado ao WDT, com uma taxa de 1:64.
  
-    bank0                   ;Seleciona o banco 0 de memÛria.
+    bank0                   ;Seleciona o banco 0 de mem√≥ria.
     clrf	PORTD		    ;Limpa todos os bits do PORTD.     						
 
 
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-;*                     	   REINICIALIZA«√O DA RAM 	                       *
+;*                     	   REINICIALIZA√á√ÉO DA RAM 	                       *
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 ;  LIMPA TODA A RAM DO BANC0 0, INDO DE 0X20 A 0X7F.
 	
 	movlw	0x20
-	movwf	FSR				;APONTA O ENDERE«AMENTO INDIRETO PARA
-							;A PRIMEIRA POSI«√O DA RAM.
+	movwf	FSR				;APONTA O ENDERE√áAMENTO INDIRETO PARA
+							;A PRIMEIRA POSI√á√ÉO DA RAM.
 LIMPA_RAM
-	clrf	INDF			;LIMPA A POSI«√O ATUAL.
-	incf	FSR,F			;INCREMENTA PONTEIRO P/ A PR”X. POS.
+	clrf	INDF			;LIMPA A POSI√á√ÉO ATUAL.
+	incf	FSR,F			;INCREMENTA PONTEIRO P/ A PR√ìX. POS.
 	movf	FSR,W
-	xorlw	0x80			;COMPARA PONTEIRO COM A ⁄LT. POS. +1.
-	btfss	STATUS,Z		;J¡ LIMPOU TODAS AS POSI«’ES?
-	goto	LIMPA_RAM		;N√O, LIMPA A PR”XIMA POSI«√O.
+	xorlw	0x80			;COMPARA PONTEIRO COM A √öLT. POS. +1.
+	btfss	STATUS,Z		;J√Å LIMPOU TODAS AS POSI√á√ïES?
+	goto	LIMPA_RAM		;N√ÉO, LIMPA A PR√ìXIMA POSI√á√ÉO.
 							;SIM, CONTINUA O PROGRAMA. 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -158,18 +158,18 @@ LIMPA_RAM
 Main:
 	
 	movlw  D'60'			;Move para W o valor 60 em decimal
-	movwf  Auxiliar1		;Move para a vari·vel Auxiliar1 o valor 60, pois cada ciclo da rotina 250 ms
-							;gasta 500 ms. Ent„o, 60*500 ms = 30 s.
+	movwf  Auxiliar1		;Move para a vari√°vel Auxiliar1 o valor 60, pois cada ciclo da rotina 250 ms
+							;gasta 500 ms. Ent√£o, 60*500 ms = 30 s.
 	call   Alterna250		;Chama a rotina para alternar o estado do LED1 a cada 250 ms.		
 	
 	movlw  D'30'			;Move para W o valor 30 em decimal
-	movwf  Auxiliar2 	 	;Move para a vari·vel Auxiliar1 o valor 30, pois cada ciclo da rotina 500 ms
-							;gasta 1 s. Ent„o, 30*1s = 30 s.
+	movwf  Auxiliar2 	 	;Move para a vari√°vel Auxiliar1 o valor 30, pois cada ciclo da rotina 500 ms
+							;gasta 1 s. Ent√£o, 30*1s = 30 s.
 	call   Alterna500		;Chama a rotina para alternar o estado do LED1 a cada 500ms.
 	
 	movlw  D'15'			;Move para W o valor 15 em decimal
-	movwf  Auxiliar3 	 	;Move para a vari·vel Auxiliar1 o valor 15, pois cada ciclo da rotina 1 s
-							;gasta 2 s. Ent„o, 15*2s = 30 s.
+	movwf  Auxiliar3 	 	;Move para a vari√°vel Auxiliar1 o valor 15, pois cada ciclo da rotina 1 s
+							;gasta 2 s. Ent√£o, 15*2s = 30 s.
 	call   Alterna1		    ;Chama a rotina para alternar o estado do LED1 a cada 500ms.
 	
 	  	
@@ -186,19 +186,19 @@ Alterna250:
 
 	movlw  D'61'			;|Move para W o valor 61 em decimal
 	movwf  Contador			;|Move para o contador o valor armazenado em w, ou seja, 61, pois com prescale
-							;|de 1:64, cada estouro do timer equivale ‡ 4,096 ms. Multiplicando por 61, gera 249,856 ms.
+							;|de 1:64, cada estouro do timer equivale √† 4,096 ms. Multiplicando por 61, gera 249,856 ms.
 							;|A rotina complementar inicia com 247, gerando mais 9 incrementos no timer0. Pois cada incremento
-							;|leva 0,016 ms. 250 - 249,856 = 0,144 ms. Ent„o, 9 * 0,016 ms = 0,144 ms. Somando com 249,856 = 250 ms.	
+							;|leva 0,016 ms. 250 - 249,856 = 0,144 ms. Ent√£o, 9 * 0,016 ms = 0,144 ms. Somando com 249,856 = 250 ms.	
 								
 	call   Conta250			;Chama a rotina para aguardar 250 ms 	
 	DESLIGA_LED1			;Desliga o LED1
 	movlw  D'61'			;Move para W o valor 61 em decimal
 	movwf  Contador			;Move para o contador o valor armazenado em w, ou seja, 61.
 	call   Conta250			;Chama a rotina para aguardar 250 ms			
-	decfsz Auxiliar1		;Decrementa 1 da vari·vel Auxiliar1 e pula se for zero
-	goto   Alterna250		;Retorna para a funÁ„o Alterna250		
+	decfsz Auxiliar1		;Decrementa 1 da vari√°vel Auxiliar1 e pula se for zero
+	goto   Alterna250		;Retorna para a fun√ß√£o Alterna250		
 
-return						;Retorna da funÁ„o.
+return						;Retorna da fun√ß√£o.
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *	               ROTINA PARA ALTERNAR O LED A CADA 500 ms                 *
@@ -220,10 +220,10 @@ Alterna500:
 	movlw  D'61'			;Move para W o valor 61 em decimal
 	movwf  Contador			;Move para o contador o valor armazenado em w, ou seja, 61.
 	call   Conta250			;Chama a rotina para aguardar 250 ms				
-	decfsz Auxiliar2		;Decrementa 1 da vari·vel Auxiliar2 e pula se for zero
-	goto   Alterna500		;Retorna para a funÁ„o Alterna500		
+	decfsz Auxiliar2		;Decrementa 1 da vari√°vel Auxiliar2 e pula se for zero
+	goto   Alterna500		;Retorna para a fun√ß√£o Alterna500		
 
-return						;Retorna da funÁ„o.	
+return						;Retorna da fun√ß√£o.	
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *	               ROTINA PARA ALTERNAR O LED A CADA 1 s                    *
@@ -257,10 +257,10 @@ Alterna1:
 	movlw  D'61'			;Move para W o valor 61 em decimal
 	movwf  Contador			;Move para o contador o valor armazenado em w, ou seja, 61.
 	call   Conta250			;Chama a rotina para aguardar 250 ms				
-	decfsz Auxiliar3		;Decrementa 1 da vari·vel Auxiliar3 e pula se for zero
-	goto   Alterna1	     	;Retorna para a funÁ„o Alterna1		
+	decfsz Auxiliar3		;Decrementa 1 da vari√°vel Auxiliar3 e pula se for zero
+	goto   Alterna1	     	;Retorna para a fun√ß√£o Alterna1		
 
-return						;Retorna da funÁ„o.	
+return						;Retorna da fun√ß√£o.	
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *	              	         ROTINA PARA CONTAR 250 ms                      *
@@ -268,38 +268,38 @@ return						;Retorna da funÁ„o.
 
 Conta250:
 	
-	nop						;InstruÁ„o para peder um ciclo de m·quina (N„o necess·ria)
+	nop						;Instru√ß√£o para peder um ciclo de m√°quina (N√£o necess√°ria)
 	btfss   INTCON,2		;Houve overflow no timer0?
-	goto    Conta250	    ;N„o, ent„o retorna para a funÁ„o Conta250
-	bcf		INTCON,2		;Sim. Ent„o Limpa o bit de estouro do flag do timer0	
-	decfsz  Contador		;Decrementa um do contador, e pula instruÁ„o posterior se for zero.
-	goto	Conta250		;Retorna para a funÁ„o Conta250
+	goto    Conta250	    ;N√£o, ent√£o retorna para a fun√ß√£o Conta250
+	bcf		INTCON,2		;Sim. Ent√£o Limpa o bit de estouro do flag do timer0	
+	decfsz  Contador		;Decrementa um do contador, e pula instru√ß√£o posterior se for zero.
+	goto	Conta250		;Retorna para a fun√ß√£o Conta250
 	
 	movlw	D'247'			;Move para W o valor 247
-	movwf	TMR0			;Move o valor de w, que È 247 para o registrador TMR0, para dar os 9 incrementos restantes
+	movwf	TMR0			;Move o valor de w, que √© 247 para o registrador TMR0, para dar os 9 incrementos restantes
 							;para completar os 250ms.
 	movlw   B'11010101'	    ;Move para w o valor '11010101'
     
     movwf   OPTION_REG		;Move o valor de w para o registrador OPTION_REG, redefinindo o prescaler em 1:64.
     
-    call    Complementar	;Chama a funÁ„o complementar.	
+    call    Complementar	;Chama a fun√ß√£o complementar.	
 
 return
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *	              	          FUN«√O COMPLEMENTAR                           *
+; *	              	          FUN√á√ÉO COMPLEMENTAR                           *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-;FunÁ„o para contar um tempo complementar, para chegar aos 250 ms da funÁ„o Conta250.
+;Fun√ß√£o para contar um tempo complementar, para chegar aos 250 ms da fun√ß√£o Conta250.
 
 Complementar:
 	
-	nop						;InstruÁ„o para perder um ciclo de m·quina
+	nop						;Instru√ß√£o para perder um ciclo de m√°quina
 	btfss	INTCON,2		;Houve overflow no timer0?
-	goto 	Complementar	;N„o, ent„o retorna para a funÁ„o complementar.
+	goto 	Complementar	;N√£o, ent√£o retorna para a fun√ß√£o complementar.
 	bcf     INTCON,2		;Limpa o bit de flag do estouro do timer0
 	
-return						;Sim, ent„o retorna da funÁ„o Complementar.
+return						;Sim, ent√£o retorna da fun√ß√£o Complementar.
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *                          	FIM DO PROGRAMA                             *
