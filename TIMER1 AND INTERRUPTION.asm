@@ -1,72 +1,72 @@
 ;  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                   C”DIGO FONTE P/ DATAPOLL PIC-2377                     *
+; *                   C√ìDIGO FONTE P/ DATAPOLL PIC-2377                     *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-; Projeto: Lab 8 - Timer 1 e InterrupÁ„o.
-; Aluno: Juliano Rodrigues Dourado
-; Data:	27/04/2017
+;
+; Autor: Juliano Rodrigues Dourado
+;
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                             DESCRI«√O GERAL                             *
+; *                             DESCRI√á√ÉO GERAL                             *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 ;A cada 250 ms devem ser incrementados os 
 ;displays de 7 segmentos, simulando um 
-;cronÙmetro. ComeÁando em 00.00 (MM.SS), 
+;cron√¥metro. Come√ßando em 00.00 (MM.SS), 
 ;chegando a 23.59;
-;A temporizaÁ„o deve ser realizada pelo Timer 1, 
-;atravÈs do uso de interrupÁ„o;
+;A temporiza√ß√£o deve ser realizada pelo Timer 1, 
+;atrav√©s do uso de interrup√ß√£o;
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                      CONFIGURA«√O DOS JUMPERS DE PLACA                  *
+; *                      CONFIGURA√á√ÉO DOS JUMPERS DE PLACA                  *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
-;Habilitar todos os dips de CH4 (posiÁ„o ON para 
+;Habilitar todos os dips de CH4 (posi√ß√£o ON para 
 ;cima);
-;Habilitar o dip CH6,1-4 (posiÁ„o ON para cima);
+;Habilitar o dip CH6,1-4 (posi√ß√£o ON para cima);
 ;Desabilitar as demais chaves DIP;
-;Manter o jumper J3 na posiÁ„o B e J4 na posiÁ„o A;
+;Manter o jumper J3 na posi√ß√£o B e J4 na posi√ß√£o A;
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                         CONFIGURA«’ES PARA GRAVA«√O                     *
+; *                         CONFIGURA√á√ïES PARA GRAVA√á√ÉO                     *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 __config  _WDT_OFF & _HS_OSC & _LVP_OFF & _DEBUG_ON & _BODEN_OFF 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                          ARQUIVOS DE DEFINI«’ES                         *
+; *                          ARQUIVOS DE DEFINI√á√ïES                         *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-#INCLUDE <P16F877.INC>		;ARQUIVO PADR√O MICROCHIP PARA 16F877 
+#INCLUDE <P16F877.INC>		;ARQUIVO PADR√ÉO MICROCHIP PARA 16F877 
 
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-;*                     DEFINI«√O DAS VARI¡VEIS                             *
+;*                     DEFINI√á√ÉO DAS VARI√ÅVEIS                             *
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-CBLOCK	0X20		    ;POSI«√O INICIAL DA RAM
+CBLOCK	0X20		    ;POSI√á√ÉO INICIAL DA RAM
     
-    Incremento			;Vari·vel para ser incrementada a cada 250 ms
-    Auxiliar1			;Vari·vel Auxiliar para contagem do tempo. Ser· utilizada para
+    Incremento			;Vari√°vel para ser incrementada a cada 250 ms
+    Auxiliar1			;Vari√°vel Auxiliar para contagem do tempo. Ser√° utilizada para
     					;contar 250 ms, a cada 2 estouros do timer1
-    Auxiliar2			;Vari·vel para auxiliar na contagem do display3, pois quando a mesma tiver
-     					;no valor, 23, ser· reiniciada.					
-    PCLATH_TEMP			;Vari·vel utilizada no salvamento e recuperaÁ„o de contexto
-    					;PCLATH tempor·rio.
-    STATUS_TEMP			;Vari·vel utilizada no salvamento e recuperaÁ„o de contexto
-    					;STATUS tempor·rio
-    W_TEMP				;Vari·vel utilizada no salvamento e recuperaÁ„o de contexto
-    					;W tempor·rio.
-	DISP2				;Vari·vel para armazenar o conte˙do a ser mostrado no display2
-	DISP3				;Vari·vel para armazenar o conte˙do a ser mostrado no display3
-	DISP4				;Vari·vel para armazenar o conte˙do a ser mostrado no display4
+    Auxiliar2			;Vari√°vel para auxiliar na contagem do display3, pois quando a mesma tiver
+     					;no valor, 23, ser√° reiniciada.					
+    PCLATH_TEMP			;Vari√°vel utilizada no salvamento e recupera√ß√£o de contexto
+    					;PCLATH tempor√°rio.
+    STATUS_TEMP			;Vari√°vel utilizada no salvamento e recupera√ß√£o de contexto
+    					;STATUS tempor√°rio
+    W_TEMP				;Vari√°vel utilizada no salvamento e recupera√ß√£o de contexto
+    					;W tempor√°rio.
+	DISP2				;Vari√°vel para armazenar o conte√∫do a ser mostrado no display2
+	DISP3				;Vari√°vel para armazenar o conte√∫do a ser mostrado no display3
+	DISP4				;Vari√°vel para armazenar o conte√∫do a ser mostrado no display4
 
-ENDC					;TÈrmino da declaraÁ„o das vari·veis.
+ENDC					;T√©rmino da declara√ß√£o das vari√°veis.
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *                      DEFINI«√O DOS BANCOS DA RAM 		      		    *
+; *                      DEFINI√á√ÉO DOS BANCOS DA RAM 		      		    *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-bank0  MACRO 							;Cria uma macro para o banco 0 de memÛria.
+bank0  MACRO 							;Cria uma macro para o banco 0 de mem√≥ria.
 				bcf STATUS,RP0              
 				bcf STATUS,RP1
 	   ENDM		                        ;Fim da macro para o banco 0.
@@ -80,15 +80,15 @@ bank1  MACRO
 ; *                   VETOR DE RESET DO MICROCONTROLADOR                    *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	
-	ORG	0x00				;ENDERE«O INICIAL DE PROCESSAMENTO.
-	goto	Inicio			;Vai para o inÌcio.
+	ORG	0x00				;ENDERE√áO INICIAL DE PROCESSAMENTO.
+	goto	Inicio			;Vai para o in√≠cio.
 	
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *               VETOR DE INTERRUP«√O DO MICROCONTROLADOR                  *
+; *               VETOR DE INTERRUP√á√ÉO DO MICROCONTROLADOR                  *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-	ORG	0x04			    ;ENDERE«O INICIAL DA INTERRUP«√O.
-Interrupcao:				;FUN«√O PARA TRATAMENTO DA INTERRUP«√O
+	ORG	0x04			    ;ENDERE√áO INICIAL DA INTERRUP√á√ÉO.
+Interrupcao:				;FUN√á√ÉO PARA TRATAMENTO DA INTERRUP√á√ÉO
   
 ;Comandos para salvar contexto (W e os flags do registrador STATUS), conforme
    ;DATASHEET.
@@ -99,25 +99,25 @@ Interrupcao:				;FUN«√O PARA TRATAMENTO DA INTERRUP«√O
     movwf  STATUS_TEMP 		;Salva o STATUS para o registrador STATUS_TEMP 
     movf   PCLATH, W 		;Move o PCLath para W
     movwf  PCLATH_TEMP 		;Salva o PCLATH em W
-    clrf   PCLATH 			;P·gina zero, independentemente da p·gina atual
+    clrf   PCLATH 			;P√°gina zero, independentemente da p√°gina atual
 ;--------------------------------------------------------------------------------------------	
     bcf	   PIR1,0				;Limpa o flag de estouro do TIMER1
     
-    movlw	B'00001011'			;|Esse conjunto de instruÁıes, move o valor 3096 para TMR1,				
-	movwf   TMR1H           	;|isso para, parametrizar, InterrupÁıes a cada 125 ms. Pois, com					
+    movlw	B'00001011'			;|Esse conjunto de instru√ß√µes, move o valor 3096 para TMR1,				
+	movwf   TMR1H           	;|isso para, parametrizar, Interrup√ß√µes a cada 125 ms. Pois, com					
     movlw	B'11011100'     	;|prescale de 1:8, cada incremento no registrador equivale a 0,002 ms.
-    movwf	TMR1L				;|Logo, 62500*0,002 = 125 ms. Ent„o, 65536 - 62500 = 3096.
+    movwf	TMR1L				;|Logo, 62500*0,002 = 125 ms. Ent√£o, 65536 - 62500 = 3096.
     
-    movlw   B'00110101'			;Redefine o prescale apÛs carregar valores no TMR1H e TMR1L	
+    movlw   B'00110101'			;Redefine o prescale ap√≥s carregar valores no TMR1H e TMR1L	
     movwf   T1CON				;Habilita o Timer1, clock interno como fonte e Prescale 1:8
     
     decfsz Auxiliar1			;Decrementa 1 da Auxiliar1, e pula se for zero, ou seja, se passaram 250 ms.
-    goto   RecuperaContexto		;Pula para a label RecuperaContexto, ou seja, ainda n„o se passaram
-    							;250ms para que seja realizada a operaÁ„o de incremento.			
+    goto   RecuperaContexto		;Pula para a label RecuperaContexto, ou seja, ainda n√£o se passaram
+    							;250ms para que seja realizada a opera√ß√£o de incremento.			
 	movlw  D'2'					
-	movwf  Auxiliar1			;Recarrega a vari·vel Auxiliar1 com '2', pois haver· um estouro no timer1,
-								;a cada 125ms, ent„o 125ms * 2 = 250 ms.
-	incf   Incremento			;Incrementa 1 ‡ vari·vel Incremento		
+	movwf  Auxiliar1			;Recarrega a vari√°vel Auxiliar1 com '2', pois haver√° um estouro no timer1,
+								;a cada 125ms, ent√£o 125ms * 2 = 250 ms.
+	incf   Incremento			;Incrementa 1 √† vari√°vel Incremento		
     
 ;Comandos para recuperar contexto, conforme DATASHEET 
 RecuperaContexto:
@@ -131,77 +131,77 @@ RecuperaContexto:
     swapf  W_TEMP,W 			;Troca W_TEMP com W
 	
 	
-	retfie	            				;Retorna da interrupÁ„o.
+	retfie	            				;Retorna da interrup√ß√£o.
 	
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ; *	                      	  ROTINA TABELA                                 *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  
-ORG	 0x1E					;EndereÁo inicial da tabela.
+ORG	 0x1E					;Endere√ßo inicial da tabela.
 Tabela:
 	
-	addwf	PCL			    ;Recebe pelo w a posiÁ„o da tabela que se deseja ler,
+	addwf	PCL			    ;Recebe pelo w a posi√ß√£o da tabela que se deseja ler,
 							;e soma ao PC.
- 	retlw   B'00000011'     ;Retorna 1a posiÁ„o (W = 0)
- 	retlw	B'10011111'		;Retorna 2a posiÁ„o (W = 1)	
- 	retlw	B'00100101'     ;Retorna 3a posiÁ„o	(W = 2)
- 	retlw	B'00001101'	    ;Retorna 4a posiÁ„o (W = 3)
- 	retlw	B'10011001'		;Retorna 5a	posiÁ„o (W = 4)
- 	retlw	B'01001001'	    ;Retorna 6a posiÁ„o	(W = 5)	
- 	retlw	B'01000001'		;Retorna 7a posiÁ„o (W = 6)
- 	retlw	B'00011111'		;Retorna 8a posiÁ„o	(W = 7)
- 	retlw	B'00000001'		;Retorna 9a posiÁ„o (W = 8)
- 	retlw	B'00001001'		;Retorna 10a posiÁ„o (W = 9)	
+ 	retlw   B'00000011'     ;Retorna 1a posi√ß√£o (W = 0)
+ 	retlw	B'10011111'		;Retorna 2a posi√ß√£o (W = 1)	
+ 	retlw	B'00100101'     ;Retorna 3a posi√ß√£o	(W = 2)
+ 	retlw	B'00001101'	    ;Retorna 4a posi√ß√£o (W = 3)
+ 	retlw	B'10011001'		;Retorna 5a	posi√ß√£o (W = 4)
+ 	retlw	B'01001001'	    ;Retorna 6a posi√ß√£o	(W = 5)	
+ 	retlw	B'01000001'		;Retorna 7a posi√ß√£o (W = 6)
+ 	retlw	B'00011111'		;Retorna 8a posi√ß√£o	(W = 7)
+ 	retlw	B'00000001'		;Retorna 9a posi√ß√£o (W = 8)
+ 	retlw	B'00001001'		;Retorna 10a posi√ß√£o (W = 9)	
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *              CONFIGURA«’ES INICIAIS DE HARDWARE E SOFTWARE              *
+; *              CONFIGURA√á√ïES INICIAIS DE HARDWARE E SOFTWARE              *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-; Nesta rotina s„o inicializadas as portas de I/O do microcontrolador, os
-; perifÈricos que ser„o usados e as configuraÁıes dos registradores 
+; Nesta rotina s√£o inicializadas as portas de I/O do microcontrolador, os
+; perif√©ricos que ser√£o usados e as configura√ß√µes dos registradores 
 ; especiais (SFR). 
 
 Inicio: 
 
-   bank1					;Seleciona o banco 1 de memÛria.
+   bank1					;Seleciona o banco 1 de mem√≥ria.
   
    movlw   B'00000000'		;Move para w o valor 00000000.
-   movwf   TRISD            ;Move o valor de w para TRISD, para definir todos os bits de PORTD como saÌdas.
+   movwf   TRISD            ;Move o valor de w para TRISD, para definir todos os bits de PORTD como sa√≠das.
    movlw   B'00011111'		
-   movwf   TRISA            ;Move pra TRISA o valor 00011111, para definir o bit RA5 como saÌda e acionar o display
+   movwf   TRISA            ;Move pra TRISA o valor 00011111, para definir o bit RA5 como sa√≠da e acionar o display
    movlw   B'00000000'     
-   movwf   TRISE 			;Move para TRISE o valor 00000000, para definir os bits RE2, RE1 e RE0 como saÌdas e acionarem o display.
+   movwf   TRISE 			;Move para TRISE o valor 00000000, para definir os bits RE2, RE1 e RE0 como sa√≠das e acionarem o display.
    movlw   B'00001111'	    
-   movwf   ADCON1           ;Move para o registrador ADCON1 o valor armazenado em w, definindo RE0,RE1,RE2 e RA5 como saÌdas DIGITAIS.
+   movwf   ADCON1           ;Move para o registrador ADCON1 o valor armazenado em w, definindo RE0,RE1,RE2 e RA5 como sa√≠das DIGITAIS.
    movlw   B'00000101'			
    movwf   T1CON			;Habilita o Timer1, clock interno como fonte e Prescale 1:1	
    movlw   B'11000000'		
-   movwf   INTCON			;Habilita as interrupÁıes gerais, e as interrupÁıes por perifÈricos. A interrupÁ„o pelo Timer0 
+   movwf   INTCON			;Habilita as interrup√ß√µes gerais, e as interrup√ß√µes por perif√©ricos. A interrup√ß√£o pelo Timer0 
    							;fica desativada.	
    movlw   B'00000001'	
-   movwf   PIE1				;Habilita interrupÁ„o para o Timer1.	
+   movwf   PIE1				;Habilita interrup√ß√£o para o Timer1.	
    
    movlw   B'11010101'		
    movwf   OPTION_REG		;Configura para o Timer0: Clock interno, incremento na borda de descida, prescaler dessaciado ao WDT
-   							;e com taxa de 1:64. Ou seja, cada estouro equivale a 4,096 ms. Ser· usado para alternar entre displays.							
+   							;e com taxa de 1:64. Ou seja, cada estouro equivale a 4,096 ms. Ser√° usado para alternar entre displays.							
   
-   bank0                    ;Seleciona o banco 0 de memÛria 
-   clrf	PORTD		        ;Limpa todos os bits de saÌda, do PORTD, que s„o saÌdas para o LED.  
+   bank0                    ;Seleciona o banco 0 de mem√≥ria 
+   clrf	PORTD		        ;Limpa todos os bits de sa√≠da, do PORTD, que s√£o sa√≠das para o LED.  
    
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-;*                     	   REINICIALIZA«√O DA RAM 	                       *
+;*                     	   REINICIALIZA√á√ÉO DA RAM 	                       *
 ;* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;  LIMPA TODA A RAM DO BANC0 0, INDO DE 0X20 A 0X7F.
 	
 	movlw	0x20
-	movwf	FSR				;APONTA O ENDERE«AMENTO INDIRETO PARA
-							;A PRIMEIRA POSI«√O DA RAM.
+	movwf	FSR				;APONTA O ENDERE√áAMENTO INDIRETO PARA
+							;A PRIMEIRA POSI√á√ÉO DA RAM.
 LIMPA_RAM
-	clrf	INDF			;LIMPA A POSI«√O ATUAL.
-	incf	FSR,F			;INCREMENTA PONTEIRO P/ A PR”X. POS.
+	clrf	INDF			;LIMPA A POSI√á√ÉO ATUAL.
+	incf	FSR,F			;INCREMENTA PONTEIRO P/ A PR√ìX. POS.
 	movf	FSR,W
-	xorlw	0x80			;COMPARA PONTEIRO COM A ⁄LT. POS. +1.
-	btfss	STATUS,Z		;J¡ LIMPOU TODAS AS POSI«’ES?
-	goto	LIMPA_RAM		;N√O, LIMPA A PR”XIMA POSI«√O.
+	xorlw	0x80			;COMPARA PONTEIRO COM A √öLT. POS. +1.
+	btfss	STATUS,Z		;J√Å LIMPOU TODAS AS POSI√á√ïES?
+	goto	LIMPA_RAM		;N√ÉO, LIMPA A PR√ìXIMA POSI√á√ÉO.
 							;SIM, CONTINUA O PROGRAMA.   
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -212,23 +212,23 @@ LIMPA_RAM
 Main:
 
 	movlw	B'11111111'		;Move para w o valor '11111111'
-	movwf	PORTD			;Desliga as saÌdas do PORTD para que os LEDs iniciem desligados
+	movwf	PORTD			;Desliga as sa√≠das do PORTD para que os LEDs iniciem desligados
 	movlw	D'2'			
-	movwf   Auxiliar1		;A vari·vel Auxiliar1 inicia com o valor 2, pois dela ser· decrementado a cada
-							;interrupÁ„o, que acontecer· ‡ cada 125ms. Ent„o, a mesma ter· valor 0 quando se 
-							;passarem 250 ms, e ser· recarregada com o valor 2 dentro da rotina de InterrupÁ„o.
+	movwf   Auxiliar1		;A vari√°vel Auxiliar1 inicia com o valor 2, pois dela ser√° decrementado a cada
+							;interrup√ß√£o, que acontecer√° √† cada 125ms. Ent√£o, a mesma ter√° valor 0 quando se 
+							;passarem 250 ms, e ser√° recarregada com o valor 2 dentro da rotina de Interrup√ß√£o.
 	movlw	D'0'			
-	movwf	Auxiliar2		;Inicia a vari·vel Auxiliar2 em 0, que servir· para contar atÈ 23, quando deve-se
+	movwf	Auxiliar2		;Inicia a vari√°vel Auxiliar2 em 0, que servir√° para contar at√© 23, quando deve-se
 							;reiniciar o ciclo de contagem, 23:59 -> 00:00.						
 							
 	clrf	TMR1L			;Limpa o registrador TMR1L para em seguida, escrever no mesmo.
 	
-	movlw	B'00001011'		;|Esse conjunto de instruÁıes, move o valor 3096 para TMR1,				
-	movwf   TMR1H           ;|isso para, parametrizar, InterrupÁıes a cada 125 ms. Pois, com					
+	movlw	B'00001011'		;|Esse conjunto de instru√ß√µes, move o valor 3096 para TMR1,				
+	movwf   TMR1H           ;|isso para, parametrizar, Interrup√ß√µes a cada 125 ms. Pois, com					
     movlw	B'11011100'     ;|prescale de 1:8, cada incremento no registrador equivale a 0,002 ms.
-    movwf	TMR1L			;|Logo, 62500*0,002 = 125 ms. Ent„o, 65536 - 6250 = 3096.
+    movwf	TMR1L			;|Logo, 62500*0,002 = 125 ms. Ent√£o, 65536 - 6250 = 3096.
     
-    movlw   B'00110101'		;Redefine o prescale apÛs carregar valores no TMR1H e TMR1L	
+    movlw   B'00110101'		;Redefine o prescale ap√≥s carregar valores no TMR1H e TMR1L	
     movwf   T1CON			;Habilita o Timer1, clock interno como fonte e Prescale 1:8	
     
 
@@ -237,75 +237,75 @@ Main:
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *   
 VarrerDisplays:
     
-    movf	Incremento,W	;Move o conte˙do de Incremento para W
-    sublw	D'10'			;Subtrai 10 da vari·vel W, ou seja se o resultado for zero, a vari·vel Incremento deve ser reiniciada e 
-    						;deve incrementar 1 na vari·vel DISP2.
-    btfsc	STATUS,Z		;O bit Z do resgistrador STATUS È zero? Ou seja, o resultado da operaÁ„o anterior n„o foi zero?
-    call	Muda1			;Chama a rotina Muda1, que incrementa 1 na vari·vel de "Dezenas de segundos (DISP2)" e reinicia a contagem
-    						;de unidades de segundos na vari·vel Incremento.
-    movf	Incremento,W    ;Passa o conte˙do de incremento para W
-    call    Tabela			;O conte˙do de incremento ser· o valor a ser mostrado no display1, ent„o chama a rotina de tabela. 	
+    movf	Incremento,W	;Move o conte√∫do de Incremento para W
+    sublw	D'10'			;Subtrai 10 da vari√°vel W, ou seja se o resultado for zero, a vari√°vel Incremento deve ser reiniciada e 
+    						;deve incrementar 1 na vari√°vel DISP2.
+    btfsc	STATUS,Z		;O bit Z do resgistrador STATUS √© zero? Ou seja, o resultado da opera√ß√£o anterior n√£o foi zero?
+    call	Muda1			;Chama a rotina Muda1, que incrementa 1 na vari√°vel de "Dezenas de segundos (DISP2)" e reinicia a contagem
+    						;de unidades de segundos na vari√°vel Incremento.
+    movf	Incremento,W    ;Passa o conte√∫do de incremento para W
+    call    Tabela			;O conte√∫do de incremento ser√° o valor a ser mostrado no display1, ent√£o chama a rotina de tabela. 	
     	
-	bcf     PORTE,0         ;Define nÌvel baixo em RE0 para ativar o display 1
-    bsf     PORTE,1			;Define nÌvel alto em RE1 para desativar o display 2
-    bsf		PORTE,2 	 	;Define nÌvel alto em RE2 para desativar o display 3
-    bsf		PORTA,5			;Define nÌvel alto em RA5 para desativar o display 4
+	bcf     PORTE,0         ;Define n√≠vel baixo em RE0 para ativar o display 1
+    bsf     PORTE,1			;Define n√≠vel alto em RE1 para desativar o display 2
+    bsf		PORTE,2 	 	;Define n√≠vel alto em RE2 para desativar o display 3
+    bsf		PORTA,5			;Define n√≠vel alto em RA5 para desativar o display 4
     movwf	PORTD			;Liga os LEDs de acordo com o valor retornado em W pela rotina de Tabela.
-    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no prÛximo display
+    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no pr√≥ximo display
     
-    movf	DISP2,W			;Move o conte˙do de DISP2 para W
-    sublw	D'6'			;Subtrai 6 da vari·vel W, ou seja se o resultado for zero, a vari·vel DISP2 deve ser reiniciada, e deve ser incrementado
-    						; 1 na vari·vel DISP3.
-    btfsc	STATUS,Z		;O bit Z do registrador STATUS È zero? Ou seja, o resultado da operaÁ„o anterior n„o foi zero?	
-    call    Muda2			;N„o.Chama a rotina Muda2, que incrementa 1 na vari·vel "unidades de minutos(DISP3)" e reinicia a contagem
+    movf	DISP2,W			;Move o conte√∫do de DISP2 para W
+    sublw	D'6'			;Subtrai 6 da vari√°vel W, ou seja se o resultado for zero, a vari√°vel DISP2 deve ser reiniciada, e deve ser incrementado
+    						; 1 na vari√°vel DISP3.
+    btfsc	STATUS,Z		;O bit Z do registrador STATUS √© zero? Ou seja, o resultado da opera√ß√£o anterior n√£o foi zero?	
+    call    Muda2			;N√£o.Chama a rotina Muda2, que incrementa 1 na vari√°vel "unidades de minutos(DISP3)" e reinicia a contagem
     						;de dezenas de segundos.
-    movf	DISP2,W			;Sim.Move o conte˙do de DISP2 para W
-    call    Tabela			;O conte˙do de DISP 2 ser· o valor a ser mostrado no display2, ent„o chama a rotina de tabela.							
+    movf	DISP2,W			;Sim.Move o conte√∫do de DISP2 para W
+    call    Tabela			;O conte√∫do de DISP 2 ser√° o valor a ser mostrado no display2, ent√£o chama a rotina de tabela.							
     
-    bsf     PORTE,0         ;Define nÌvel baixo em RE0 para desativar o display 1
-    bcf     PORTE,1			;Define nÌvel alto em RE1 para ativar o display 2
-    bsf		PORTE,2 	 	;Define nÌvel alto em RE2 para desativar o display 3
-    bsf		PORTA,5			;Define nÌvel alto em RA5 para desativar o display 4y
+    bsf     PORTE,0         ;Define n√≠vel baixo em RE0 para desativar o display 1
+    bcf     PORTE,1			;Define n√≠vel alto em RE1 para ativar o display 2
+    bsf		PORTE,2 	 	;Define n√≠vel alto em RE2 para desativar o display 3
+    bsf		PORTA,5			;Define n√≠vel alto em RA5 para desativar o display 4y
     movwf	PORTD			;Liga os LEDs conforme valor retornado pela Tabela.
-    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no prÛximo display
+    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no pr√≥ximo display
     
-    movf	Auxiliar2,W		;Move o conte˙do de Auxiliar2 para W
-	sublw	D'24'			;Subtrai 24 de W, pois, se o resultado for zero, significa que devemos reiniciar o cronÙmetro, pois 
-							;chegamos ao valor m·ximo, 23:59. Essa vari·vel È incrementada a cada mudanÁa da vari·vel DISP3.
-	btfsc	STATUS,Z		;O bit Z do registrador STATUS n„o È zero? Ou seja, o resultado anterior n„o deu zero.
-	call	Organiza		;N„o, o resultado deu zero sim. Chama a funÁ„o que reiniciar· a contagem da vari·vel quando a mesma for para o quarto incremento.
-    movf	DISP3,W			;Move o conte˙do de DISP3 para W
-    sublw	D'10'			;Subtrai 10 da vari·vel W, ou seja se o resultado for zero, a vari·vel DISP3 deve ser reiniciada
-    btfsc	STATUS,Z		;O bit Z do registrador STATUS È zero? Ou seja, o resultado da operaÁ„o anterior n„o foi zero?
-    call    Muda3			;N„o, o resultado foi zero. Ent„o chama a funÁ„o Muda3 que incrementa 1 na vari·vel "dezenas de minutos(DISP4)"
-    						;e reinicia a contagem da vari·vel DISP3.	 
+    movf	Auxiliar2,W		;Move o conte√∫do de Auxiliar2 para W
+	sublw	D'24'			;Subtrai 24 de W, pois, se o resultado for zero, significa que devemos reiniciar o cron√¥metro, pois 
+							;chegamos ao valor m√°ximo, 23:59. Essa vari√°vel √© incrementada a cada mudan√ßa da vari√°vel DISP3.
+	btfsc	STATUS,Z		;O bit Z do registrador STATUS n√£o √© zero? Ou seja, o resultado anterior n√£o deu zero.
+	call	Organiza		;N√£o, o resultado deu zero sim. Chama a fun√ß√£o que reiniciar√° a contagem da vari√°vel quando a mesma for para o quarto incremento.
+    movf	DISP3,W			;Move o conte√∫do de DISP3 para W
+    sublw	D'10'			;Subtrai 10 da vari√°vel W, ou seja se o resultado for zero, a vari√°vel DISP3 deve ser reiniciada
+    btfsc	STATUS,Z		;O bit Z do registrador STATUS √© zero? Ou seja, o resultado da opera√ß√£o anterior n√£o foi zero?
+    call    Muda3			;N√£o, o resultado foi zero. Ent√£o chama a fun√ß√£o Muda3 que incrementa 1 na vari√°vel "dezenas de minutos(DISP4)"
+    						;e reinicia a contagem da vari√°vel DISP3.	 
 	
-	movf	DISP3,W			;Sim.Move o conte˙do de DISP3 para W
-	call	Tabela			;O conte˙do de DISP3 ser· o valor a ser mostrado no display3, ent„o chama a rotina de Tabela.
+	movf	DISP3,W			;Sim.Move o conte√∫do de DISP3 para W
+	call	Tabela			;O conte√∫do de DISP3 ser√° o valor a ser mostrado no display3, ent√£o chama a rotina de Tabela.
 	
-	bsf     PORTE,0         ;Define nÌvel baixo em RE0 para desativar o display 1
-    bsf     PORTE,1			;Define nÌvel alto em RE1 para desativar o display 2
-    bcf		PORTE,2 	 	;Define nÌvel alto em RE2 para ativar o display 3
-    bsf		PORTA,5			;Define nÌvel alto em RA5 para desativar o display 4
+	bsf     PORTE,0         ;Define n√≠vel baixo em RE0 para desativar o display 1
+    bsf     PORTE,1			;Define n√≠vel alto em RE1 para desativar o display 2
+    bcf		PORTE,2 	 	;Define n√≠vel alto em RE2 para ativar o display 3
+    bsf		PORTA,5			;Define n√≠vel alto em RA5 para desativar o display 4
 	movwf	PORTD			;Liga os LEDs conforme valor retornado pela rotina de Tabela
 	bcf		PORTD,0			;Liga o LED do ponto, para que o valor seja mostrado conforme solicitado. Ex: 23.59.
-    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no prÛximo display
+    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no pr√≥ximo display
     bsf		PORTD,0			;Desliga o LED do ponto.
 	
-	movf	DISP4,W			;Move o conte˙do de DISP4 para W	
-	sublw	D'3'			;Subtrai 3 da vari·vel W, pois, se o resultado dessa operaÁ„o for zero, a vari·vel DISP4 deve ser reiniciada
-	btfsc	STATUS,Z		;O bit z do registrador STATUS È zero? Ou seja, o resultado da operaÁ„o anterior n„o foi zero?
-    call 	Muda4			;N„o, o resultado deu zero. Ent„o chama a rotina Mudar4, que limpa a vari·vel DISP4 para reiniciar a contagem da mesma
+	movf	DISP4,W			;Move o conte√∫do de DISP4 para W	
+	sublw	D'3'			;Subtrai 3 da vari√°vel W, pois, se o resultado dessa opera√ß√£o for zero, a vari√°vel DISP4 deve ser reiniciada
+	btfsc	STATUS,Z		;O bit z do registrador STATUS √© zero? Ou seja, o resultado da opera√ß√£o anterior n√£o foi zero?
+    call 	Muda4			;N√£o, o resultado deu zero. Ent√£o chama a rotina Mudar4, que limpa a vari√°vel DISP4 para reiniciar a contagem da mesma
     
-    movf	DISP4,W			;Sim, n„o foi zero. Ent„o move o conte˙do de DISP4 para W, para chamar a tabela, e mostrar no display o valor correspondente.
+    movf	DISP4,W			;Sim, n√£o foi zero. Ent√£o move o conte√∫do de DISP4 para W, para chamar a tabela, e mostrar no display o valor correspondente.
     call    Tabela			;Chama a rotina de tabela para retornar o valor a ser mostrado.
     
-   	bsf     PORTE,0         ;Define nÌvel baixo em RE0 para desativar o display 1
-    bsf     PORTE,1			;Define nÌvel alto em RE1 para desativar o display 2
-    bsf		PORTE,2 	 	;Define nÌvel alto em RE2 para desativar o display 3
-    bcf		PORTA,5			;Define nÌvel alto em RA5 para ativar o display 4
+   	bsf     PORTE,0         ;Define n√≠vel baixo em RE0 para desativar o display 1
+    bsf     PORTE,1			;Define n√≠vel alto em RE1 para desativar o display 2
+    bsf		PORTE,2 	 	;Define n√≠vel alto em RE2 para desativar o display 3
+    bcf		PORTA,5			;Define n√≠vel alto em RA5 para ativar o display 4
     movwf	PORTD			;Liga os LEDs conforme valor retornado pela rotina de Tabela
-    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no prÛximo display
+    call	Temporizacao	;Chama a rotina para aguardar 4,096 ms antes de escrever no pr√≥ximo display
     
 goto VarrerDisplays
  	
@@ -314,8 +314,8 @@ goto VarrerDisplays
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  
 Muda1:
 
-	incf    DISP2			;Incrementa 1 ‡ vari·vel de dezenas de segundos	
- 	clrf	Incremento		;Limpa a vari·vel Incremento, para reiniciar a contagem 
+	incf    DISP2			;Incrementa 1 √† vari√°vel de dezenas de segundos	
+ 	clrf	Incremento		;Limpa a vari√°vel Incremento, para reiniciar a contagem 
  							;das unidades de segundos.
  
 return 	
@@ -325,11 +325,11 @@ return
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  
 Muda2:
 
-	incf    DISP3			;Incrementa 1 ‡ vari·vel de dezenas de segundos	
- 	clrf	DISP2			;Limpa a vari·vel DISP2, pois a mesma atingiu o valor m·ximo
+	incf    DISP3			;Incrementa 1 √† vari√°vel de dezenas de segundos	
+ 	clrf	DISP2			;Limpa a vari√°vel DISP2, pois a mesma atingiu o valor m√°ximo
  							;e deve ser reiniciada a contagem
- 	incf	Auxiliar2		;Incrementa 1 ‡ vari·vel Auxiliar2, para que, quando a mesma chegar ao valor
- 							;23:59 deve reiniciar o cronÙmetro.						
+ 	incf	Auxiliar2		;Incrementa 1 √† vari√°vel Auxiliar2, para que, quando a mesma chegar ao valor
+ 							;23:59 deve reiniciar o cron√¥metro.						
 
 return
 
@@ -339,9 +339,9 @@ return
 Muda3:
 	
 													
-	incf    DISP4			;Incrementa 1 ‡ vari·vel de dezenas de segundos	
- 	clrf	DISP3			;Limpa a vari·vel DISP3, reiniciando a contagem pois a
- 							;mesma atingiu o valor m·ximo de contagem						
+	incf    DISP4			;Incrementa 1 √† vari√°vel de dezenas de segundos	
+ 	clrf	DISP3			;Limpa a vari√°vel DISP3, reiniciando a contagem pois a
+ 							;mesma atingiu o valor m√°ximo de contagem						
 
 return
 
@@ -350,7 +350,7 @@ return
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  
 Muda4:	
  		
- 	clrf	DISP4			;Limpa a vari·vel DISP4, reiniciando a mesma, pois chegou ao valor m·ximo
+ 	clrf	DISP4			;Limpa a vari√°vel DISP4, reiniciando a mesma, pois chegou ao valor m√°ximo
  	
 return
 
@@ -359,22 +359,22 @@ return
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  
 Organiza:
     
-    clrf	Auxiliar2		;Limpa a vari·vel Auxiliar2 apÛs a mesma contar atÈ 23.
-	goto 	Muda3			;Chama a funÁ„o para reiniciar o DISP3
-							;e incrementar 1 ‡ vari·vel DISP4.													
+    clrf	Auxiliar2		;Limpa a vari√°vel Auxiliar2 ap√≥s a mesma contar at√© 23.
+	goto 	Muda3			;Chama a fun√ß√£o para reiniciar o DISP3
+							;e incrementar 1 √† vari√°vel DISP4.													
 return	
 
 
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-; *	                      	  ROTINA TEMPORIZA«√O                           *
+; *	                      	  ROTINA TEMPORIZA√á√ÉO                           *
 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
 Temporizacao:
 	
-	nop						;InstruÁ„o para perder um ciclo de m·quina. 
+	nop						;Instru√ß√£o para perder um ciclo de m√°quina. 
 	btfss	INTCON,2		;Houve o estouro do Timer0?
-	goto 	Temporizacao	;N„o, ent„o retorna para a rotina de Temporizacao
-	bcf		INTCON,2		;Sim, ent„o limpa o flag do timer0 e retorna da rotina de temporizaÁ„o.
+	goto 	Temporizacao	;N√£o, ent√£o retorna para a rotina de Temporizacao
+	bcf		INTCON,2		;Sim, ent√£o limpa o flag do timer0 e retorna da rotina de temporiza√ß√£o.
 				
 return				
 
